@@ -1,7 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:viber/firebase/auth_methods.dart';
+import 'package:viber/screens/home_screen.dart';
+import 'package:viber/utils/utils.dart';
 
-class RegScreen extends StatelessWidget {
-  const RegScreen({Key? key}) : super(key: key);
+class RegScreen extends StatefulWidget {
+ RegScreen({Key? key}) : super(key: key);
+
+  @override
+  State<RegScreen> createState() => _RegScreenState();
+}
+
+class _RegScreenState extends State<RegScreen> {
+  bool _isLoading=false;
+  final TextEditingController _namecontroller=TextEditingController();
+
+  final TextEditingController _emailcontroller=TextEditingController();
+
+  final TextEditingController _passwordcontroller=TextEditingController();
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading=true;
+    });
+              String res = await AuthMethods().signUpUser(
+                  email: _emailcontroller.text,
+                  password: _passwordcontroller.text,
+                  Username: _namecontroller.text,
+                 
+                  
+                  );
+                  setState(() {
+                    
+                    _isLoading=false;
+                  });
+                  if(res=='success') {
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home_Screen(),), (route) => false);
+                  }
+                  if(res!='success'){
+                    showSnackbar(res, context);
+                  }
+                  
+              
+            }
+
+
+          @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _emailcontroller.dispose();
+    _passwordcontroller.dispose();
+    _namecontroller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +67,13 @@ class RegScreen extends StatelessWidget {
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(colors: [
-                        Color(0xffB81736),
-                        Color(0xff281537),
+                        Color.fromARGB(255, 174, 185, 239),
+            Color.fromARGB(255, 138, 99, 245),
+              
                       ]),
                     ),
                     child: const Padding(
-                      padding: EdgeInsets.only(top: 60.0, left: 22),
+                      padding: EdgeInsets.only(top: 100.0, left: 22),
                       child: Text(
                         'Create Your\nAccount',
                         style: TextStyle(
@@ -33,7 +84,7 @@ class RegScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 200.0),
+                    padding: const EdgeInsets.only(top: 280.0),
                     child: Container(
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -47,82 +98,71 @@ class RegScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const TextField(
-                              decoration: InputDecoration(
+                             TextField(
+                              controller: _namecontroller,
+                              decoration: const InputDecoration(
                                   suffixIcon: Icon(Icons.check,color: Colors.grey,),
                                   label: Text('Full Name',style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color:Color(0xffB81736),
+                                   
                                   ),)
                               ),
                             ),
-                            const TextField(
-                              decoration: InputDecoration(
+                             TextField(
+                              controller: _emailcontroller,
+                              decoration: const InputDecoration(
                                   suffixIcon: Icon(Icons.check,color: Colors.grey,),
-                                  label: Text('Phone or Gmail',style: TextStyle(
+                                  label: Text('Email address',style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color:Color(0xffB81736),
+                                    
                                   ),)
                               ),
                             ),
-                            const TextField(
-                              decoration: InputDecoration(
+                             TextField(
+                              controller: _passwordcontroller,
+                              decoration: const InputDecoration(
                                   suffixIcon: Icon(Icons.visibility_off,color: Colors.grey,),
                                   label: Text('Password',style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color:Color(0xffB81736),
+                                  
                                   ),)
                               ),
                             ),
                             const TextField(
                               decoration: InputDecoration(
                                   suffixIcon: Icon(Icons.visibility_off,color: Colors.grey,),
-                                  label: Text('Conform Password',style: TextStyle(
+                                  label: Text('Confirm Password',style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color:Color(0xffB81736),
+                                    
                                   ),)
                               ),
                             ),
                 
                           
                             const SizedBox(height: 40,),
-                            Container(
-                              height: 55,
-                              width: 300,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xffB81736),
-                                      Color(0xff281537),
-                                    ]
+                            GestureDetector(
+                              onTap: ()=>signUpUser(),
+                              child: Container(
+                                height: 55,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  gradient: const LinearGradient(
+                                      colors: [
+                                         Color.fromARGB(255, 142, 158, 236),
+                                  Colors.deepPurpleAccent,
+                                      ]
+                                  ),
                                 ),
+                                child: const Center(child: Text('SIGN IN',style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.white
+                                ),),),
                               ),
-                              child: const Center(child: Text('SIGN IN',style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white
-                              ),),),
                             ),
                             const SizedBox(height: 10,),
-                            const Align(
-                              alignment: Alignment.bottomRight,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("Don't have account?",style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey
-                                  ),),
-                                  Text("Sign up",style: TextStyle(///done login page
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Colors.black
-                                  ),),
-                                ],
-                              ),
-                            )
+                            
                           ],
                         ),
                       ),
