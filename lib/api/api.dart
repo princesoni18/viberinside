@@ -7,7 +7,7 @@ class flask{
 Future<Map<String,dynamic>> fetchData(String url) async {
     
    
-   const apiUrl = "http://192.168.127.191:5000/process_image";
+   const apiUrl = "http:/process_image";
 
   try {
     final response = await http.post(
